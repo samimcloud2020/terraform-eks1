@@ -1,4 +1,4 @@
-resource "aws_vpc" "samim_vpc" {
+resource "aws_vpc" "samim_main" {
  cidr_block = "192.168.0.0/16"
  
  tags = {
@@ -9,7 +9,7 @@ resource "aws_vpc" "samim_vpc" {
 
 resource "aws_subnet" "public_subnets" {
  count      = length(var.public_subnet_cidrs)
- vpc_id     = aws_vpc.main.id
+ vpc_id     = aws_vpc.samim_main.id
  cidr_block = element(var.public_subnet_cidrs, count.index)
  
  tags = {
@@ -19,7 +19,7 @@ resource "aws_subnet" "public_subnets" {
  
 resource "aws_subnet" "private_subnets" {
  count      = length(var.private_subnet_cidrs)
- vpc_id     = aws_vpc.main.id
+ vpc_id     = aws_vpc.samim_main.id
  cidr_block = element(var.private_subnet_cidrs, count.index)
  
  tags = {
@@ -29,8 +29,39 @@ resource "aws_subnet" "private_subnets" {
 
 
 
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.samim_main.id
+
+  tags = {
+    Name = "samim_igw"
+  }
+}
 
 
+
+resource "aws_internet_gateway_attachment" "igwa" {
+  internet_gateway_id = aws_internet_gateway.igwa.id
+  vpc_id              = aws_vpc.samim_main.id
+ 
+  tags = {
+    Name = "samim_igwa"
+  }
+}
+
+
+
+resource "aws_route_table" "rt" {
+  vpc_id = aws_vpc.example.id
+
+  route {
+    cidr_block = element(var.public_subnet_cidrs, count.index)
+    gateway_id = aws_internet_gateway.igw.id
+  }
+
+  tags = {
+    Name = "samim_rt"
+  }
+}
 
 
 
