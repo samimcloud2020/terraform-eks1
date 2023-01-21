@@ -40,6 +40,7 @@ resource "aws_eks_cluster" "samim-eks" {
 
  depends_on = [
   aws_iam_role.eks-iam-role,
+  aws_subnet.public_subnets,
  ]
 }
 
