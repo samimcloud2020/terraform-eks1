@@ -1,5 +1,5 @@
 resource "aws_vpc" "samim_vpc" {
- cidr_block = "10.0.0.0/16"
+ cidr_block = "192.168.0.0/16"
  
  tags = {
    Name = "samim_vpc"
