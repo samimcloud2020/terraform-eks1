@@ -35,7 +35,7 @@ resource "aws_eks_cluster" "samim-eks" {
  role_arn = aws_iam_role.eks-iam-role.arn
 
  vpc_config {
-  subnet_ids = [var.subnet_id_1, var.subnet_id_2]
+  subnet_ids = var.public_subnet_cidrs
  }
 
  depends_on = [
@@ -83,7 +83,7 @@ resource "aws_iam_role" "workernodes" {
   cluster_name  = aws_eks_cluster.samim-eks.name
   node_group_name = "samim-workernodes"
   node_role_arn  = aws_iam_role.workernodes.arn
-  subnet_ids   = [var.subnet_id_1, var.subnet_id_2]
+  subnet_ids   = var.public_subnet_cidrs
   instance_types = ["t3.xlarge"]
  
   scaling_config {
